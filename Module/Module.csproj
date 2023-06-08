@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<AzureFunctionsVersion>v4</AzureFunctionsVersion>
+		<OutputType>Library</OutputType>
+		<Version>0.4.0</Version>
+		<PackageId>hillerod.Warehouse.Modules.OS2IOTBMS</PackageId>
+		<Authors>Kenboc</Authors>
+		<Company>Hillerød Kommune</Company>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Bygdrift.Warehouse" Version="1.2.6" />
+		<PackageReference Include="Microsoft.Azure.WebJobs.Extensions.OpenApi" Version="1.4.0" />
+		<PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.1" />
+	</ItemGroup>
+
+	<!--For testing-->
+	<ItemGroup>
+		<!--<ProjectReference Include="..\..\..\Warehouse\Warehouse\Warehouse.csproj" />-->
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="host.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="local.settings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Properties\ServiceDependencies\" />
+	</ItemGroup>
+</Project>
