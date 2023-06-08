@@ -14,7 +14,7 @@ Install the [Warehouse environment](https://github.com/Bygdrift/Warehouse/tree/m
 
 ## Add this module through Azure Portal (easiest):
 
-[![Deploy To Azure](https://raw.githubusercontent.com/hillerod/Warehouse/master/Docs/Images/deploytoazureButton.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fhillerod%2FWarehouse.Modules.OS2IOTBMS%2Fmaster%2FDeploy%2FWarehouse.Modules.OS2IOTBMS_ARM.json)
+[![Deploy To Azure](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/deploytoazureButton.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fhillerod%2FWarehouse.Modules.OS2IOTBMS%2Fmaster%2FDeploy%2FWarehouse.Modules.OS2IOTBMS_ARM.json)
 [![Visualize](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/visualizebutton.svg)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fhillerod%2FWarehouse.Modules.OS2IOTBMS%2Fmaster%2FDeploy%2FWarehouse.Modules.OS2IOT_ARM.json)
 
 This will setup a Windows hosting plan and a function app that contains the software from this GitHub repository.

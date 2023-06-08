@@ -166,7 +166,7 @@
       "apiVersion": "2021-01-01",
       "name": "[format('{0}/web', variables('functionAppName'))]",
       "properties": {
-        "repoUrl": "https://github.com/hillerod/Warehouse.Modules.OS2IOT",
+        "repoUrl": "https://github.com/hillerod/Warehouse.Modules.OS2IOTBMS",
         "branch": "master",
         "isManualIntegration": true
       },
