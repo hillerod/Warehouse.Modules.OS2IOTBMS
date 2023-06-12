@@ -26,12 +26,12 @@ namespace Module.AppFunctions
             service = new OS2IOTApiService(App);
         }
 
-        [FunctionName(nameof(GetApplications))]
-        [OpenApiOperation(operationId: nameof(GetApplications), tags: new[] { "OS2IOT" }, Summary = "Get all applications from the OS2IOT", Visibility = OpenApiVisibilityType.Important)]
+        [FunctionName(nameof(OS2GetApplications))]
+        [OpenApiOperation(operationId: nameof(OS2GetApplications), tags: new[] { "OS2IOT" }, Summary = "Get all applications from the OS2IOT", Visibility = OpenApiVisibilityType.Important)]
         [OpenApiSecurity("Azure Authorization", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query, Description = "A function app key from Azure")]  //https://devkimchi.com/2021/10/06/securing-azure-function-endpoints-via-openapi-auth/
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(Applications), Summary = "successful operation", Description = "successful operation")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.NotFound, Summary = "No modules found")]
-        public async Task<IActionResult> GetApplications([HttpTrigger(AuthorizationLevel.Function, "get", Route = "os2iot/GetApplications")] HttpRequest req)
+        public async Task<IActionResult> OS2GetApplications([HttpTrigger(AuthorizationLevel.Function, "get", Route = "os2iot/GetApplications")] HttpRequest req)
         {
             var res = await service.GetApplicationsAsync();
             return new OkObjectResult(res);

@@ -16,6 +16,9 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 using Module.AppFunctions.Models;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Azure.Storage.Queues.Models;
+using System.Collections;
 
 namespace Module.AppFunctions
 {
@@ -65,6 +68,56 @@ namespace Module.AppFunctions
 
             await App.DataLakeQueue.DeleteMessagesAsync(queues);
 
+            return new OkObjectResult(res);
+        }
+
+        [FunctionName(nameof(QueuesGetSortedAndDelete))]
+        [OpenApiOperation(operationId: nameof(QueuesGetSortedAndDelete), tags: new[] { "Queues" }, Summary = "Get all queues from the server and deletes them", Visibility = OpenApiVisibilityType.Important)]
+        [OpenApiParameter(name: "amount", In = ParameterLocation.Query, Required = false, Type = typeof(int?), Description = "The amount of fetched messages. Default = 0 means return all", Visibility = OpenApiVisibilityType.Undefined)]
+        [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(Parameters), Description = "An json array of strings that should be searched upon if queue contains. Data will be returned en this given order. If empty, all will be returned.", Required = false)]
+        [OpenApiSecurity("Azure Authorization", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query, Description = "A function app key from Azure")]  //https://devkimchi.com/2021/10/06/securing-azure-function-endpoints-via-openapi-auth/
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(List<QueueResponse>), Summary = "successful operation", Description = "successful operation")]
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.NoContent, Description = "No messages found")]
+        public async Task<IActionResult> QueuesGetSortedAndDelete([HttpTrigger(AuthorizationLevel.Function, "get", Route = "queues/GetAndDelete")] HttpRequest req)
+        {
+            var amount = GetNullableInt(req?.Query["amount"]);
+            var queues = (await App.DataLakeQueue.GetMessagesAsync(amount))?.ToList();
+            var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var res = new List<QueueResponse>();
+            var tasks = new List<Task>();
+
+            if (queues == null)
+                return new OkObjectResult(default);
+
+            if (string.IsNullOrEmpty(requestBody))
+            {
+                foreach (var queue in queues)
+                {
+                    res.Add(new QueueResponse(queue));
+                    tasks.Add(App.DataLakeQueue.DeleteMessageAsync(queue));
+                }
+            }
+            else
+            {
+                List<string> array;
+                try
+                {
+                    array = JsonConvert.DeserializeObject<List<string>>(requestBody);
+                }
+                catch (System.Exception e)
+                {
+                    return new BadRequestErrorMessageResult("The body is not correct formed like: \"[\\\"Besked 4\\\", \\\"Besked 2\\\"]\".");
+                }
+
+                foreach (var item in array)
+                    foreach (var queue in queues.Where(o => o.Body.ToString().Contains(item, System.StringComparison.InvariantCulture)))
+                    {
+                        res.Add(new QueueResponse(queue));
+                        tasks.Add(App.DataLakeQueue.DeleteMessageAsync(queue));
+                    }
+            }
+
+            await Task.WhenAll(tasks);
             return new OkObjectResult(res);
         }
 
